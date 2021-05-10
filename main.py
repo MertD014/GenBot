@@ -5,6 +5,9 @@ from discord.ext import commands
 import cogs.voice as voice
 import cogs.moderation as moderation
 import cogs.general as general
+from keepAlive import keep_alive
+
+keep_alive()
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
