@@ -4,7 +4,7 @@ from threading import Thread
 app = Flask('')
 @app.route('/')
 def main():
-  return "Your Bot Is Ready"
+  return "Ready to go!"
 def run():
   app.run(host="0.0.0.0", port=8000)
 def keep_alive():
