@@ -15,6 +15,7 @@ ytdl_format_options = {
     'restrictfilenames': True,
     'noplaylist': True,
     'nocheckcertificate': True,
+    'buffersize': '2M',
     'ignoreerrors': False,
     'logtostderr': False,
     'quiet': True,
@@ -64,12 +65,12 @@ class Music(commands.Cog):
       return await ctx.voice_client.move_to(channel)
     await channel.connect()
 
-  @commands.command(alias="stop")
+  @commands.command(aliases=['stop'])
   async def leave(self, ctx):
     await ctx.voice_client.disconnect()  #empty queue
 
   @commands.command()
-  async def pause(ctx):
+  async def pause(self, ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_playing():
         await voice_client.pause()
@@ -77,7 +78,7 @@ class Music(commands.Cog):
         await ctx.send("The bot is not playing anything at the moment.")
       
   @commands.command()
-  async def resume(ctx):
+  async def resume(self, ctx):
       voice_client = ctx.message.guild.voice_client
       if voice_client.is_paused():
           await voice_client.resume()
