@@ -7,6 +7,7 @@ import nacl
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
+queue = []
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -52,6 +53,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 #magic above i literally didint understand a bit
 
 
+
 class Music(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
@@ -62,8 +64,28 @@ class Music(commands.Cog):
       return await ctx.voice_client.move_to(channel)
     await channel.connect()
 
+  @commands.command(alias="stop")
+  async def leave(self, ctx):
+    await ctx.voice_client.disconnect()  #empty queue
+
   @commands.command()
-  async def play(self, ctx, *, url):                     #add to a list caching guild needed
+  async def pause(ctx):
+    voice_client = ctx.message.guild.voice_client
+    if voice_client.is_playing():
+        await voice_client.pause()
+    else:
+        await ctx.send("The bot is not playing anything at the moment.")
+      
+  @commands.command()
+  async def resume(ctx):
+      voice_client = ctx.message.guild.voice_client
+      if voice_client.is_paused():
+          await voice_client.resume()
+      else:
+          await ctx.send("The bot is not playing anything at the moment.")
+
+  @commands.command()
+  async def play(self, ctx, *, url):
     async with ctx.typing():
       player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
       ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
@@ -76,9 +98,7 @@ class Music(commands.Cog):
     ctx.voice_client.source.volume = volume / 100
     await ctx.send(f"Changed volume to {volume}%")
 
-  @commands.command()
-  async def stop(self, ctx):
-    await ctx.voice_client.disconnect()
+  
 
   @play.before_invoke
   async def ensure_voice(self, ctx):
@@ -90,3 +110,13 @@ class Music(commands.Cog):
         raise commands.CommandError("Author not connected to a voice channel.")
     elif ctx.voice_client.is_playing():
       ctx.voice_client.stop()
+
+
+  """
+  loop
+  loop queue
+  add queue
+  list queue
+  skip
+  
+  """
