@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import asyncio
 
 defaultBanReason = "no reason"
 defaultKickReason = "no reason"
@@ -73,3 +72,36 @@ class Moderation(commands.Cog):
   @commands.has_permissions(manage_nicknames=True)
   async def nick(self, ctx, member : discord.Member = None, *, newNick):
     await member.edit(nick = newNick)
+
+  @commands.command()
+  async def slowmode(self, ctx, seconds: int):
+    await ctx.channel.edit(slowmode_delay=seconds)
+    if seconds:
+      await ctx.send(f"Slowmode has been activated and set to {seconds} seconds!")
+    else:
+      await ctx.send(f"Slowmode has been deactivated!")
+
+  @commands.command()
+  async def serverinfo(self, ctx):
+    embed = discord.Embed(title=ctx.guild.name + " Server Information", description=ctx.guild.description, color=discord.Color.blue())
+    embed.set_thumbnail(url=ctx.guild.icon_url)
+    embed.add_field(name="Owner", value=ctx.guild.owner.mention, inline=True)
+    embed.add_field(name="Created at", value=ctx.guild.created_at.date(), inline=True)
+    embed.add_field(name="Member Count", value=ctx.guild.member_count, inline=True)
+    embed.add_field(name="Region", value=str(ctx.guild.region).capitalize(), inline=True)
+    embed.set_footer(text=f"ID: {ctx.guild.id}")
+    await ctx.send(embed=embed)
+
+  @commands.command()
+  async def userinfo(self, ctx, *, member: discord.Member = None):
+    if member is None:
+      member = ctx.author
+    embed = discord.Embed(title=member.name + " User Information", color=discord.Color.green(), description=member.mention)
+    embed.set_thumbnail(url=member.avatar_url)
+    embed.add_field(name="Joined", value=member.joined_at.date())
+    embed.add_field(name="Registered", value=member.created_at.date())
+    if len(member.roles):
+      role_string = ' '.join([r.mention for r in member.roles][1:])
+      embed.add_field(name="Roles [{}]".format(len(member.roles)-1), value=role_string, inline=False)
+    embed.set_footer(text=f"ID: {member.id}")
+    return await ctx.send(embed=embed)

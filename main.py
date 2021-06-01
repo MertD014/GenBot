@@ -7,10 +7,15 @@ import discord
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
+from keepAlive import keep_alive
+
 import cogs.voice as voice
 import cogs.moderation as moderation
 import cogs.general as general
-from keepAlive import keep_alive
+#import cogs.xp as xp
+
+
+
 
 keep_alive()                                    #works fine for now but need rework
 
@@ -23,7 +28,7 @@ bot = commands.Bot(command_prefix=botPrefix, intents = intents)                 
 @bot.event
 async def on_ready():
   async for guild in bot.fetch_guilds(limit=100):
-    print(f"Connected to {guild.name}")                                                             #print total no guilds and users
+    print(f"Connected to {guild.name}")                                                 #print total no guilds and users
   await bot.change_presence(status=discord.Status.online, activity=discord.Game("with the API"))    #add more variations
   print("Ready to go!")
 
@@ -48,16 +53,10 @@ async def on_command_error(ctx, error):
 """
 @bot.event
 async def on_member_update(before, after):
-  if after.status is discord.Status.streaming:
-    await after.guild.system_channel.send(f"@everyone {after.mention} is streaming! Go check it out") #get stream info
-
-
-    --->whitelist
+  if before.activity.type is not discord.ActivityType.streaming and after.activity.type is discord.ActivityType.streaming:
+    await after.guild.system_channel.send(f"{after.mention} is streaming on {after.activity.platform}: {after.activity.name}.\nJoin here: {after.activity.url}")
 """
 
-@bot.command()
-async def s2s(ctx):
-  await ctx.send("ZİH̨̢̀İ͚̹Ņ͟͝SE͎͔̪L̖ ̅̏̃҉SO̅RU̿͂ͣǸ̅̏ ͋̅͊Y̷̸͟Aͯ̋̈RDIͫ̄͠M̄̃̏ ͑ͪͬE̒̎ͫDİͥ̌͑N\nMENTAL COKUNTU\n⣿⣯⣿⣿⣿⣶⣶⣶⣶⣤⣤⣤⣀\n⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷\n　　⠈⠻⣿⡛⠉⠭⠉⠉⢉⣿⣿⣧\n⠲⣶⠖⠄⠄⢿⣿⠄⠶⣶⣾⣿⣿⣿⣿⣧\n　　　⠺⢿⡗⠄⣹⣿⣿⠿⣟⣿⡏\n　　　　⠤⠤⢾⣿⣿⣿⣦⠘⡿\n　　⠈⢻⡿⣷⣶⣶⣤⣤⣤⣶⣦\n　　　⣽⣿⣿⣿⣿⣿⣿⣿⣿⡟\n　　　⠘⠿⣿⣿⣿⣿⣿⣿⣿\n　　　　　⠉⠉⠛⠋\nAkıl sağlığını\nĀ̴ ̈́̋͌ ͋̀͌ ̡̥͔t̵̛̔ ͛̾̉ ̀͐͝ ͕͈͖ì̶͠ ̑̉̃l̵̇̔l̶̇͠ ̽͗̓kaybet\n̯̬ ̸̲̀K̷̅̾ ̧̜͙.̷̓̕ ͊̐͒ ̛̀͊ ̶̆̅ ̭̞̦ ̲̞̙İ̴͆͝ ̹̥̩z̷̀̈l̶̇͠e̵̅͑ ̸ ̀͘͠ ̅̋̏l̵͘͘ ̾̉̏ ̋̏͌ ̝͖̭a̸̔ yk")
 
 
 #Here we go!
@@ -65,5 +64,6 @@ async def s2s(ctx):
 bot.add_cog(general.General(bot))
 bot.add_cog(moderation.Moderation(bot))
 bot.add_cog(voice.Music(bot))
+#bot.add_cog(xp.Xp(bot))                       why broken bruh
 
 bot.run(DISCORD_TOKEN)

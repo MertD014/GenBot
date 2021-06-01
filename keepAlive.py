@@ -1,3 +1,7 @@
+#https://www.heroku.com/
+#hosting option
+
+
 from flask import Flask
 from threading import Thread
 

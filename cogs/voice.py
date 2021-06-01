@@ -1,3 +1,6 @@
+#https://gist.github.com/Lenart12/024222b63db38c65f68b57ae7e623d56
+#useful source for voice cog
+
 import discord
 from discord.ext import commands
 import asyncio
@@ -5,25 +8,27 @@ import opus
 import youtube_dl
 import nacl
 
-youtube_dl.utils.bug_reports_message = lambda: ''
-
-queue = []
+youtube_dl.utils.bug_reports_message = lambda: ''  #silence warnings?
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
+    'extractaudio': True,
+    'audioformat': 'mp3',
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
     'noplaylist': True,
     'nocheckcertificate': True,
+    'buffersize': '1M',
     'ignoreerrors': False,
     'logtostderr': False,
     'quiet': True,
     'no_warnings': True,
-    'default_search': 'auto',
+    'default_search': 'ytsearch',
     'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
 }
 
 ffmpeg_options = {
+    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
     'options': '-vn'
 }
 
@@ -36,6 +41,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     self.data = data
     self.title = data.get('title')
     self.url = data.get('url')
+    self.duration = data.get('duration')
 
   @classmethod
   async def from_url(cls, url, *, loop=None, stream=False):
@@ -50,26 +56,25 @@ class YTDLSource(discord.PCMVolumeTransformer):
     return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
 
-#magic above i literally didint understand a bit
-
-
 
 class Music(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
 
+
   @commands.command()
-  async def join(self, ctx, *, channel: discord.VoiceChannel):
+  async def join(self, ctx):
+    channel = ctx.message.author.voice_channel
     if ctx.voice_client is not None:
       return await ctx.voice_client.move_to(channel)
     await channel.connect()
 
-  @commands.command(alias="stop")
+  @commands.command(aliases=['stop'])
   async def leave(self, ctx):
     await ctx.voice_client.disconnect()  #empty queue
 
   @commands.command()
-  async def pause(ctx):
+  async def pause(self, ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_playing():
         await voice_client.pause()
@@ -77,7 +82,7 @@ class Music(commands.Cog):
         await ctx.send("The bot is not playing anything at the moment.")
       
   @commands.command()
-  async def resume(ctx):
+  async def resume(self, ctx):
       voice_client = ctx.message.guild.voice_client
       if voice_client.is_paused():
           await voice_client.resume()
@@ -92,14 +97,23 @@ class Music(commands.Cog):
     await ctx.send(f'Now playing: {player.title}')
 
   @commands.command()
+  async def ytd(self, ctx, *, url):
+    async with ctx.typing():
+      player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=False)
+      ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
+    await ctx.send(f'Now playing: {player.title}')
+
+  @commands.command()
   async def volume(self, ctx, volume: int):
     if ctx.voice_client is None:
       return await ctx.send("Not connected to a voice channel.")
+    elif volume > 100:
+      volume = 100
     ctx.voice_client.source.volume = volume / 100
     await ctx.send(f"Changed volume to {volume}%")
 
   
-
+  @join.before_invoke
   @play.before_invoke
   async def ensure_voice(self, ctx):
     if ctx.voice_client is None:
@@ -110,13 +124,3 @@ class Music(commands.Cog):
         raise commands.CommandError("Author not connected to a voice channel.")
     elif ctx.voice_client.is_playing():
       ctx.voice_client.stop()
-
-
-  """
-  loop
-  loop queue
-  add queue
-  list queue
-  skip
-  
-  """
