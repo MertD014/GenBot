@@ -18,7 +18,6 @@ ytdl_format_options = {
     'restrictfilenames': True,
     'noplaylist': True,
     'nocheckcertificate': True,
-    'buffersize': '1M',
     'ignoreerrors': False,
     'logtostderr': False,
     'quiet': True,
