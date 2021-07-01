@@ -1,3 +1,5 @@
+#import commands from main.py or make an event manager cog
+
 import discord
 from discord.ext import commands
 import json
@@ -19,12 +21,3 @@ class General(commands.Cog):
   async def ping(self, ctx):
     await ctx.send(f'Pong! {int(self.bot.latency*1000)}ms')
 
-  
-      
-
-
-
-    
-  
-#import commands from main.py or make an event manager cog
-#pro tips 1: on cogs use listeners instead of events

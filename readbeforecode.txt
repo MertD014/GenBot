@@ -2,38 +2,44 @@ Pls dont forget passing self as an argument in cogs
 Dont even try using events in cogs there is listeners
 When using task.loop remember to task.start :(
 Do not postpone bugfixes
-fix the damn voice cog
-And pls ask yourself if it is worth your time
 
 
-keep alive not keeping alive wtf
-in main.py noUsers calculation sucks
-.leaderboard - list xp in a human readable way (there is the .top command currently and if you really try you would be just wasting your time it is just printing id's :S)
-ability to create surveys
-auto roles
-reaction roles
-queue songs
-spam protection
-log member updates
-custom command support
-twitch integration
-file system for saving information
-youtube integration
-spotify integration
-ai :)
-rpg game
-text based story thingy
-merge with R ??
+#https://twentysix26.github.io/Red-Docs/red_commands/ 
+#https://replit.com/@aeri/aebrie
+#useful link to get ideas for new commmands and modules
 
 
 
+NEW
+  youtube integration
+  spotify integration
+  ability to create surveys
+  auto roles
+  reaction roles
+  queue songs
+  spam protection
+  log member updates
+  custom command support
+  twitch integration
 
+FIX
+  keep alive not keeping alive wtf
+  in main.py noUsers calculation sucks
+  .top - list xp in a human readable way
+  the damn voice cog
+  voice loop breaks the bot (fix:restart)  
 
-top.gg
-youtube
-twitch
-discord
-steam
+KEEP_IN_MIND
+  ai :)
+  rpg game
+  text based story thingy
+  merge with R ??
 
-need a logo
-need a host
+ONE_DAY_WE_WILL
+  top.gg
+  youtube
+  twitch
+  discord
+  steam
+  logo
+  host

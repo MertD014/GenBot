@@ -8,7 +8,7 @@ import opus
 import youtube_dl
 import nacl
 
-youtube_dl.utils.bug_reports_message = lambda: ''  #silence warnings?
+youtube_dl.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
@@ -23,7 +23,7 @@ ytdl_format_options = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'ytsearch',
-    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
+    'source_address': '0.0.0.0'
 }
 
 ffmpeg_options = {
@@ -48,7 +48,6 @@ class YTDLSource(discord.PCMVolumeTransformer):
     data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
 
     if 'entries' in data:
-      # take first item from a playlist
       data = data['entries'][0]
 
     filename = data['url'] if stream else ytdl.prepare_filename(data)
@@ -70,7 +69,7 @@ class Music(commands.Cog):
 
   @commands.command(aliases=['stop'])
   async def leave(self, ctx):
-    await ctx.voice_client.disconnect()  #empty queue
+    await ctx.voice_client.disconnect()
 
   @commands.command()
   async def pause(self, ctx):

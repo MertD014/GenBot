@@ -1,22 +1,15 @@
-#https://twentysix26.github.io/Red-Docs/red_commands/ 
-#https://replit.com/@aeri/aebrie
-#useful link to get ideas for new commmands and modules
-#modular programming go brrrrrrr
-
 import discord
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import json
 
-import cogs.voice as voice
+import cogs.music as music
 import cogs.moderation as moderation
 import cogs.general as general
-import cogs.xp as xp
-import cogs.music as music
-
-
-
+import cogs.memes as memes
+#import cogs.xp as xp
+#import cogs.voice as voice
 
 
 load_dotenv()
@@ -31,8 +24,6 @@ def get_prefix(client, message):
   return prefixes[str(message.guild.id)]
 
 bot = commands.Bot(command_prefix=(get_prefix), intents = intents)
-
-
 
 
 @bot.event
@@ -85,5 +76,7 @@ bot.add_cog(moderation.Moderation(bot))
 #bot.add_cog(voice.Music(bot))    #my music cog
 bot.add_cog(music.Music(bot))     #someone elses music cog
 #bot.add_cog(xp.Xp(bot))          #xp disabled need rework
+bot.add_cog(memes.Memes(bot))
+
 
 bot.run(DISCORD_TOKEN)

@@ -64,8 +64,8 @@ class Moderation(commands.Cog):
     await member.edit(mute = True)
 
   @commands.command()
-  @commands.has_guild_permissions(mute_members=True)                       #guild permission r&d needed
-  async def unmute(self, ctx, member : discord.Member = None):              #balckfury special easter egg dm
+  @commands.has_guild_permissions(mute_members=True)                        #guild permission r&d needed
+  async def unmute(self, ctx, member : discord.Member = None):              #blackfury special easter egg dm 
     await member.edit(mute = False)
 
   @commands.command()
