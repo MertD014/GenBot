@@ -21,3 +21,8 @@ class General(commands.Cog):
   async def ping(self, ctx):
     await ctx.send(f'Pong! {int(self.bot.latency*1000)}ms')
 
+  @commands.command()
+  async def invite(self, ctx):
+    await ctx.send("You can invite me using the link below!  :point_down: ")
+    await ctx.send("https://discord.com/api/oauth2/authorize?client_id=823842213225562144&permissions=8&scope=bot")
+

@@ -7,9 +7,8 @@ import json
 import cogs.music as music
 import cogs.moderation as moderation
 import cogs.general as general
-import cogs.memes as memes
+import cogs.reddit as reddit
 #import cogs.xp as xp
-#import cogs.voice as voice
 
 
 load_dotenv()
@@ -44,18 +43,18 @@ async def on_guild_join(guild):
     await guild.system_channel.send(f'Thanks for inviting me to {guild.name}')
     await guild.system_channel.send(f'For more info type .help ^^')
     
-  with open('prefixes.json', 'r') as f:
+  with open('data/prefixes.json', 'r') as f:
     prefixes = json.load(f)
     prefixes[str(guild.id)] = defaultPrefix
-  with open('prefixes.json', 'w') as f:
+  with open('data/prefixes.json', 'w') as f:
     json.dump(prefixes, f, indent=4)
 
 @bot.event
 async def on_guild_remove(guild):
-  with open('prefixes.json', 'r') as f:
+  with open('data/prefixes.json', 'r') as f:
     prefixes = json.load(f)
     prefixes.pop(str(guild.id))
-  with open('prefixes.json', 'w') as f:
+  with open('data/prefixes.json', 'w') as f:
     json.dump(prefixes, f, indent=4)
 
 
@@ -73,10 +72,8 @@ async def on_command_error(ctx, error):
 
 bot.add_cog(general.General(bot))
 bot.add_cog(moderation.Moderation(bot))
-#bot.add_cog(voice.Music(bot))    #my music cog
-bot.add_cog(music.Music(bot))     #someone elses music cog
+bot.add_cog(music.Music(bot))
+bot.add_cog(reddit.Reddit(bot))
 #bot.add_cog(xp.Xp(bot))          #xp disabled need rework
-bot.add_cog(memes.Memes(bot))
-
 
 bot.run(DISCORD_TOKEN)
